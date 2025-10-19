@@ -20,10 +20,19 @@ API REST para gestión de lista negra global de emails utilizando arquitectura h
 
 ### Variables de Entorno
 
-- `DATABASE_URL`: URL de conexión a PostgreSQL (default: postgresql+asyncpg://blacklist_user:blacklist_pass@localhost:5432/blacklist_db)
+#### Variables de Base de Datos (RDS)
+- `RDS_HOSTNAME`: Host de la base de datos PostgreSQL
+- `RDS_USERNAME`: Usuario de PostgreSQL
+- `RDS_PASSWORD`: Contraseña de PostgreSQL
+- `RDS_DB_NAME`: Nombre de la base de datos
+- `RDS_PORT`: Puerto de PostgreSQL (default: 5432)
+
+#### Variables de Aplicación
 - `AUTH_TOKEN`: Token de autenticación estático (default: bearer-token-static-2024)
 - `APP_NAME`: Nombre de la aplicación (default: Blacklist API)
 - `DB_ECHO`: Habilitar logs SQL (default: False)
+
+> **Nota**: El proyecto usa variables de entorno compatibles con AWS RDS, lo que facilita la integración con Elastic Beanstalk.
 
 ## Ejecución con Docker Compose
 
@@ -41,6 +50,7 @@ El proyecto está configurado para despliegue en AWS Elastic Beanstalk con:
 - ✅ Auto scaling configurado
 - ✅ Variables de entorno predefinidas
 - ✅ Configuración de nginx optimizada
+- ✅ Integración nativa con AWS RDS
 
 ### Quick Start
 
@@ -54,12 +64,24 @@ eb init
 # Crear environment
 eb create blacklist-api-production
 
-# Configurar base de datos
-eb setenv DATABASE_URL="postgresql+asyncpg://user:pass@host:5432/dbname"
+# Configurar base de datos RDS (opción 1: usando RDS de AWS)
+# Si conectas una instancia RDS desde la consola de EB, las variables se configuran automáticamente
+
+# Configurar base de datos manualmente (opción 2)
+eb setenv \
+  RDS_HOSTNAME="your-rds-endpoint.rds.amazonaws.com" \
+  RDS_USERNAME="your_user" \
+  RDS_PASSWORD="your_password" \
+  RDS_DB_NAME="blacklist_db" \
+  RDS_PORT="5432"
 
 # Desplegar
 eb deploy
 ```
+
+### Configuración de RDS en Elastic Beanstalk
+
+Elastic Beanstalk puede configurar automáticamente las variables de entorno RDS cuando vinculas una instancia de base de datos al environment. Esto hace que la aplicación se integre sin configuración adicional.
 
 ## Ejecución Local
 
@@ -78,14 +100,26 @@ docker-compose up postgres -d
 3. Configurar variables de entorno:
 
 ```bash
-export DATABASE_URL="postgresql+asyncpg://blacklist_user:blacklist_pass@localhost:5432/blacklist_db"
+export RDS_HOSTNAME="localhost"
+export RDS_USERNAME="blacklist_user"
+export RDS_PASSWORD="blacklist_pass"
+export RDS_DB_NAME="blacklist_db"
+export RDS_PORT="5433"
 export AUTH_TOKEN="bearer-token-static-2024"
 ```
+
+> **Nota**: El puerto 5433 se usa porque docker-compose mapea PostgreSQL al puerto 5433 del host para evitar conflictos con instalaciones locales de PostgreSQL.
 
 4. Ejecutar la aplicación:
 
 ```bash
 poetry run uvicorn entrypoints.api.main:app --host 0.0.0.0 --port 9000 --reload
+```
+
+**Alternativa**: Ejecutar todo con Docker Compose:
+
+```bash
+docker-compose up --build
 ```
 
 ## Endpoints
@@ -144,38 +178,6 @@ Una vez que la API esté ejecutándose, accede a:
 
 - **Swagger UI**: http://localhost:9000/docs
 - **ReDoc**: http://localhost:9000/redoc
-
-### Pruebas con Postman
-
-La colección completa de Postman incluye:
-- ✅ 3 endpoints documentados (Health, POST, GET)
-- ✅ Tests automatizados
-- ✅ Múltiples ejemplos de respuesta
-- ✅ Variables de entorno configuradas
-
-**Archivos incluidos:**
-- `Blacklist_API.postman_collection.json` - Colección completa
-- `Blacklist_API.postman_environment.json` - Variables de entorno
-
-**Guía completa:** Ver `POSTMAN_DOCUMENTATION_GUIDE.md`
-
-#### Importar en Postman
-
-1. Abrir Postman
-2. Importar `Blacklist_API.postman_collection.json`
-3. Importar `Blacklist_API.postman_environment.json`
-4. Seleccionar el environment "Blacklist API - Development"
-5. Ejecutar los requests de prueba
-
-#### Publicar Documentación
-
-**Quick Start**: Ver `QUICK_START_POSTMAN.md` (5 minutos)
-
-**Guía Completa**: Ver `POSTMAN_DOCUMENTATION_GUIDE.md` para:
-- Publicar la documentación en Postman
-- Crear workspace de equipo
-- Compartir la URL con el equipo
-- Escenarios de prueba detallados
 
 ## Arquitectura
 
