@@ -1,0 +1,66 @@
+[tool.poetry]
+name = "emails-app"
+version = "1.0.0"
+description = "Permite ingresar un correo a la lista negra global"
+authors = [
+  "Nicolas Caicedo <ng.caicedo@uniandes.edu.co>"
+]
+license = "MIT"
+readme = "README.md"
+package-mode = false
+packages = [{include = "*", from = "src"}]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.dependencies]
+python = "~3.11"
+uvicorn = "~0.35.0"
+sqlmodel = "~0.0.24"
+fastapi = {extras = ["standard"], version = "~0.116.1"}
+asyncpg = "~0.30.0"
+psycopg2-binary = "~2.9.10"
+httpx = "~0.28.1"
+
+[tool.isort]
+# https://pycqa.github.io/isort/docs/configuration/black_compatibility/
+profile = "black"
+multi_line_output = 3
+
+[tool.bandit]
+# See https://bandit.readthedocs.io/en/latest/config.html for reference
+exclude_dirs = ["./tests"]
+skips = ["B101"]
+
+[tool.pydoclint]
+# See https://jsh9.github.io/pydoclint/how_to_config.html#2-specifying-options-in-a-configuration-file for config reference.
+style = "google"
+arg-type-hints-in-docstring = true
+check-return-types = false
+check-yield-types = false
+
+[tool.ruff]
+# Directories to consider "first party" imports
+src = ["src"]
+fix = true
+
+[tool.ruff.lint.pydocstyle]
+# See https://docs.astral.sh/ruff/settings/#pydocstyle for reference.
+convention = "google"
+
+[tool.ruff.lint.mccabe]
+# See https://docs.astral.sh/ruff/settings/#mccabe for reference.
+max-complexity = 20
+
+[tool.pytest.ini_options]
+# https://docs.pytest.org/en/7.2.x/reference/customize.html for reference
+python_files = "test_*.py"
+pythonpath = "src"
+testpaths = [
+  "tests"
+]
+env = [ # environment variables for testing
+  "LOG_LEVEL = INFO"
+]
+

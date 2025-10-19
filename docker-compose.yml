@@ -1,0 +1,39 @@
+services:
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: blacklist_db
+      POSTGRES_USER: blacklist_user
+      POSTGRES_PASSWORD: blacklist_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U blacklist_user -d blacklist_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  blacklist_api:
+    build:
+      context: ./
+    environment:
+      PYTHONPATH: /app/src
+      RDS_HOSTNAME: postgres
+      RDS_USERNAME: blacklist_user
+      RDS_PASSWORD: blacklist_pass
+      RDS_DB_NAME: blacklist_db
+      RDS_PORT: "5432"
+      AUTH_TOKEN: bearer-token-static-2024
+      APP_NAME: Blacklist API
+      DB_ECHO: "False"
+    ports:
+      - "9000:9000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
