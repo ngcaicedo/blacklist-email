@@ -1,0 +1,50 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      # Configurar Python 3.11
+      - echo "Configurando Python 3.11..."
+      - python3.11 --version
+      
+      # Instalar Poetry
+      - echo "Instalando Poetry..."
+      - pip install poetry==2.1.1
+      
+      # Configurar Poetry para no crear entorno virtual (similar a Dockerfile)
+      - poetry config virtualenvs.create false
+      
+      # Instalar dependencias (incluyendo dev dependencies para tests)
+      - echo "Instalando dependencias..."
+      - poetry install --with dev
+      
+      # Verificar instalación
+      - poetry --version
+      - python --version
+
+  build:
+    commands:      
+      # Ejecutar tests con pytest
+      - echo "Ejecutando tests..."
+      - poetry run pytest src/tests/ -v --tb=short
+
+  post_build:
+    commands:
+      # Mostrar información del build
+      - echo "Build completado exitosamente"
+      - echo "Python version:"
+      - python --version
+      - echo "Poetry version:"
+      - poetry --version
+
+artifacts:
+  files:
+    - '**/*'
+  name: blacklist-api-build-$(date +%Y-%m-%d)
+
+reports:
+  pytest-reports:
+    files:
+      - '**/*'
+    base-directory: '.'
+
