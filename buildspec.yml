@@ -16,7 +16,7 @@ phases:
       
       # Instalar dependencias (incluyendo dev dependencies para tests)
       - echo "Instalando dependencias..."
-      - poetry install --with dev
+      - poetry install
       
       # Verificar instalación
       - poetry --version
