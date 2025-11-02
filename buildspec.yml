@@ -41,6 +41,7 @@ artifacts:
   files:
     - '**/*'
   base-directory: '.'
+  name: blacklist-api-build-$(date +%Y-%m-%d)
 
 reports:
   pytest-reports:
