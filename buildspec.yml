@@ -48,6 +48,7 @@ artifacts:
     - '.git/**'
     - '*.md'
 
+
   name: blacklist-api-build-$(date +%Y-%m-%d)
 
 reports:
