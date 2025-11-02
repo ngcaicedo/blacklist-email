@@ -59,7 +59,7 @@ class TestBlacklistRouter:
             
             assert response.status_code == status.HTTP_201_CREATED
             data = response.json()
-            assert data["message"] == "Email added to blacklist successfully"
+            assert data["message"] == "Email added to blacklist successfully test"
             assert data["email"] == email
             assert "blocked_at" in data
             mock_use_case.execute.assert_called_once()
