@@ -58,9 +58,13 @@ max-complexity = 20
 python_files = "test_*.py"
 pythonpath = "src"
 testpaths = [
-  "tests"
+    "src/tests"
 ]
 env = [ # environment variables for testing
   "LOG_LEVEL = INFO"
 ]
 
+
+[tool.poetry.group.dev.dependencies]
+pytest-asyncio = ">=1.2.0,<2.0.0"
+pytest = ">=8.4.2,<9.0.0"

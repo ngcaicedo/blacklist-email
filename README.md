@@ -20,6 +20,7 @@ API REST para gestión de lista negra global de emails utilizando arquitectura h
 
 ### Variables de Entorno
 
+
 #### Variables de Base de Datos (RDS)
 - `RDS_HOSTNAME`: Host de la base de datos PostgreSQL
 - `RDS_USERNAME`: Usuario de PostgreSQL
