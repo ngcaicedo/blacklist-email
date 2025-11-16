@@ -122,7 +122,7 @@ async def add_email_to_blacklist(
     - Integración con múltiples sistemas
     
     Notas:
-    - Retorna estado 200 tanto si el email está bloqueado como si no
+    - Retorna estado 200 si el email está bloqueado o no
     - Requiere autenticación mediante Bearer Token
     """,
     response_description="Estado del email en la lista negra",
