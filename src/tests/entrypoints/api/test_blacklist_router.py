@@ -29,7 +29,7 @@ class TestBlacklistRouter:
         
         blocked_at = datetime.now(timezone.utc)
         mock_response = BlacklistCreateResponse(
-            message="Email added to blacklist successfully",
+            message="Email added to blacklist successfully test",
             email=email,
             blocked_at=blocked_at,
         )
