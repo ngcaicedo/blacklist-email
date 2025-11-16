@@ -3,6 +3,9 @@ version: 0.2
 phases:
   pre_build:
     commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 590340239150.dkr.ecr.us-east-1.amazonaws.com
+      
       # Configurar Python 3.11
       - echo "Configurando Python 3.11..."
       - python3.11 --version
@@ -23,13 +26,27 @@ phases:
       - python --version
 
   build:
-    commands:      
+    commands:
+      - echo Build started on `date`
+      
       # Ejecutar tests con pytest
       - echo "Ejecutando tests..."
       - poetry run pytest src/tests/ -v --tb=short
+      
+      - echo Building the Docker image...
+      - docker build -t blacklist .
+      - docker tag blacklist:latest 590340239150.dkr.ecr.us-east-1.amazonaws.com/blacklist:latest
 
   post_build:
     commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker push 590340239150.dkr.ecr.us-east-1.amazonaws.com/blacklist:latest
+      - echo Writing Image Definitions file...
+      - printf '[{"name":"Container-blacklist-api","imageUri":"590340239150.dkr.ecr.us-east-1.amazonaws.com/blacklist:latest"}]' > imagedefinitions.json
+      - printf '{"ImageURI":"590340239150.dkr.ecr.us-east-1.amazonaws.com/blacklist:latest"}' > imageDetail.json
+      - cat imagedefinitions.json
+      
       # Mostrar información del build
       - echo "Build completado exitosamente"
       - echo "Python version:"
@@ -40,8 +57,18 @@ phases:
 artifacts:
   files:
     - '**/*'
+    - imagedefinitions.json
+    - imageDetail.json
   base-directory: '.'
   name: blacklist-api-build-$(date +%Y-%m-%d)
+  secondary-artifacts:
+    DefinitionArtifact:
+      files:
+        - appspec.json
+        - taskdef.json
+    ImageArtifact:
+      files:
+        - imageDetail.json
 
 reports:
   pytest-reports:

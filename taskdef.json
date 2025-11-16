@@ -1,0 +1,26 @@
+{
+  "executionRoleArn": "arn:aws:iam::590340239150:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "portMappings": [
+        {
+          "hostPort": 9000,
+          "protocol": "tcp",
+          "containerPort": 9000
+        }
+      ],
+      "image": "<IMAGE1_NAME>",
+      "essential": true,
+      "name": "blacklist-app"
+    }
+  ],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "networkMode": "awsvpc",
+  "cpu": "512",
+  "memory": "1024",
+  "family": "Task-app-blacklist"
+}
+
+

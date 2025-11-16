@@ -1,0 +1,29 @@
+{
+    "taskDefinition": "Task-app-blacklist:3",
+    "cluster": "snoopy-penguin-6zdbdn",
+    "loadBalancers": [
+        {
+            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:590340239150:targetgroup/target-group-1/d2bf67d79ff1fc2a",
+            "containerName": "blacklist-app",
+            "containerPort": 9000
+        }
+    ],
+    "desiredCount": 1,
+    "launchType": "FARGATE",
+    "schedulingStrategy": "REPLICA",
+    "deploymentController": {
+        "type": "CODE_DEPLOY"
+    },
+    "networkConfiguration": {
+        "awsvpcConfiguration": {
+            "subnets": [
+                "subnet-0b9de3da9bbb720fa",
+                "subnet-06515d4cee411c6b6"
+            ],
+            "securityGroups": [
+                "sg-09c5de800081158c0"
+            ],
+            "assignPublicIp": "ENABLED"
+        }
+    }
+}
