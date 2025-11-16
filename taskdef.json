@@ -14,24 +14,8 @@
       "name": "blacklist-app",
       "environment": [
         {
-          "name": "RDS_HOSTNAME",
-          "value": "<RDS_HOSTNAME>"
-        },
-        {
-          "name": "RDS_USERNAME",
-          "value": "<RDS_USERNAME>"
-        },
-        {
-          "name": "RDS_DB_NAME",
-          "value": "<RDS_DB_NAME>"
-        },
-        {
           "name": "RDS_PORT",
           "value": "5432"
-        },
-        {
-          "name": "AUTH_TOKEN",
-          "value": "<AUTH_TOKEN>"
         },
         {
           "name": "APP_NAME",
@@ -40,10 +24,28 @@
         {
           "name": "DB_ECHO",
           "value": "False"
-        },
+        }
+      ],
+      "secrets": [
         {
           "name": "RDS_PASSWORD",
-          "value": "<RDS_PASSWORD>"
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:590340239150:secret:blacklist/rds/password-simNBg:RDS_PASSWORD::"
+        },
+        {
+          "name": "RDS_USERNAME",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:590340239150:secret:blacklist/rds/password-simNBg:RDS_USERNAME::"
+        },
+        {
+          "name": "RDS_HOSTNAME",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:590340239150:secret:blacklist/rds/password-simNBg:RDS_HOSTNAME::"
+        },
+        {
+          "name": "RDS_DB_NAME",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:590340239150:secret:blacklist/rds/password-simNBg:RDS_DB_NAME::"
+        },
+        {
+          "name": "AUTH_TOKEN",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:590340239150:secret:blacklist/rds/password-simNBg:AUTH_TOKEN::"
         }
       ]
     }
