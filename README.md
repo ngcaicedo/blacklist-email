@@ -339,3 +339,4 @@ Configuración para despliegue en ECS Fargate:
 - Puerto: `9000`
 - Recursos: 512 CPU, 1024 MB memoria
 
+
