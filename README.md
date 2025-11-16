@@ -338,3 +338,4 @@ Configuración para despliegue en ECS Fargate:
 - Contenedor: `blacklist-app`
 - Puerto: `9000`
 - Recursos: 512 CPU, 1024 MB memoria
+
