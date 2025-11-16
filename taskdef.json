@@ -11,7 +11,41 @@
       ],
       "image": "<IMAGE1_NAME>",
       "essential": true,
-      "name": "blacklist-app"
+      "name": "blacklist-app",
+      "environment": [
+        {
+          "name": "RDS_HOSTNAME",
+          "value": "<RDS_HOSTNAME>"
+        },
+        {
+          "name": "RDS_USERNAME",
+          "value": "<RDS_USERNAME>"
+        },
+        {
+          "name": "RDS_DB_NAME",
+          "value": "<RDS_DB_NAME>"
+        },
+        {
+          "name": "RDS_PORT",
+          "value": "5432"
+        },
+        {
+          "name": "AUTH_TOKEN",
+          "value": "<AUTH_TOKEN>"
+        },
+        {
+          "name": "APP_NAME",
+          "value": "Blacklist API"
+        },
+        {
+          "name": "DB_ECHO",
+          "value": "False"
+        },
+        {
+          "name": "RDS_PASSWORD",
+          "value": "<RDS_PASSWORD>"
+        }
+      ]
     }
   ],
   "requiresCompatibilities": [

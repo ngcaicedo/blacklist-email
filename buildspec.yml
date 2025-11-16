@@ -47,6 +47,15 @@ phases:
       - printf '{"ImageURI":"590340239150.dkr.ecr.us-east-1.amazonaws.com/blacklist:latest"}' > imageDetail.json
       - cat imagedefinitions.json
       
+      # Actualizar taskdef.json con valores reales
+      - echo "Actualizando taskdef.json con variables de entorno..."
+      - |
+        sed -i "s|<RDS_HOSTNAME>|${RDS_HOSTNAME}|g" taskdef.json
+        sed -i "s|<RDS_USERNAME>|${RDS_USERNAME}|g" taskdef.json
+        sed -i "s|<RDS_DB_NAME>|${RDS_DB_NAME}|g" taskdef.json
+        sed -i "s|<AUTH_TOKEN>|${AUTH_TOKEN}|g" taskdef.json
+        sed -i "s|<RDS_PASSWORD>|${RDS_PASSWORD}|g" taskdef.json
+      
       # Mostrar información del build
       - echo "Build completado exitosamente"
       - echo "Python version:"
