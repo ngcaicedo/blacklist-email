@@ -43,9 +43,90 @@ docker-compose up --build
 
 La API estará disponible en `http://localhost:9000`
 
-## Despliegue en AWS Elastic Beanstalk
+## Despliegue en AWS
 
-El proyecto está configurado para despliegue en AWS Elastic Beanstalk con:
+El proyecto soporta múltiples métodos de despliegue en AWS:
+
+### Opción 1: AWS ECS Fargate con CodeBuild/CodeDeploy (Recomendado)
+
+El proyecto está configurado para CI/CD completo con AWS CodeBuild, ECR y ECS Fargate:
+
+- ✅ Pipeline automatizado con CodeBuild (`buildspec.yml`)
+- ✅ Construcción y push de imagen Docker a ECR
+- ✅ Ejecución de tests automatizados con pytest
+- ✅ Despliegue en ECS Fargate con CodeDeploy (`appspec.json`)
+- ✅ Health check configurado en `/health`
+- ✅ Integración con AWS RDS
+
+#### Archivos de Configuración
+
+- `buildspec.yml`: Configuración de CodeBuild para build, test y push a ECR
+- `appspec.json`: Configuración de CodeDeploy para ECS Fargate
+- `taskdef.json`: Definición de tarea ECS (Fargate, 512 CPU, 1024 MB memoria)
+
+#### Repositorio ECR
+
+- **Región**: `us-east-1`
+- **Repositorio**: `blacklist`
+- **URI completa**: `590340239150.dkr.ecr.us-east-1.amazonaws.com/blacklist:latest`
+
+#### Proceso de Build
+
+El pipeline de CodeBuild ejecuta:
+
+1. **Pre-build**: Login a ECR, instalación de Poetry y dependencias
+2. **Build**: Ejecución de tests y construcción de imagen Docker
+3. **Post-build**: Push de imagen a ECR y generación de archivos de definición
+
+#### Configuración Requerida
+
+1. **ECR Repository**: Crear repositorio `blacklist` en ECR
+2. **CodeBuild Project**: Configurar proyecto con `buildspec.yml`
+3. **ECS Cluster**: Crear cluster de ECS
+4. **Task Definition**: Usar `taskdef.json` como base (reemplazar `<IMAGE1_NAME>` con la URI de ECR)
+5. **CodeDeploy Application**: Configurar aplicación para ECS con `appspec.json`
+6. **IAM Roles**: 
+   - `ecsTaskExecutionRole` para ejecución de tareas ECS
+   - Permisos de CodeBuild para ECR y ECS
+
+#### Variables de Entorno en ECS
+
+Configurar las variables de entorno en la definición de tarea ECS:
+
+```json
+{
+  "environment": [
+    {
+      "name": "RDS_HOSTNAME",
+      "value": "your-rds-endpoint.rds.amazonaws.com"
+    },
+    {
+      "name": "RDS_USERNAME",
+      "value": "your_user"
+    },
+    {
+      "name": "RDS_PASSWORD",
+      "value": "your_password"
+    },
+    {
+      "name": "RDS_DB_NAME",
+      "value": "blacklist_db"
+    },
+    {
+      "name": "RDS_PORT",
+      "value": "5432"
+    },
+    {
+      "name": "AUTH_TOKEN",
+      "value": "bearer-token-static-2024"
+    }
+  ]
+}
+```
+
+### Opción 2: AWS Elastic Beanstalk
+
+El proyecto también está configurado para despliegue en AWS Elastic Beanstalk con:
 
 - ✅ Health check configurado en `/health`
 - ✅ Auto scaling configurado
@@ -53,7 +134,7 @@ El proyecto está configurado para despliegue en AWS Elastic Beanstalk con:
 - ✅ Configuración de nginx optimizada
 - ✅ Integración nativa con AWS RDS
 
-### Quick Start
+#### Quick Start
 
 ```bash
 # Instalar EB CLI
@@ -80,7 +161,7 @@ eb setenv \
 eb deploy
 ```
 
-### Configuración de RDS en Elastic Beanstalk
+#### Configuración de RDS en Elastic Beanstalk
 
 Elastic Beanstalk puede configurar automáticamente las variables de entorno RDS cuando vinculas una instancia de base de datos al environment. Esto hace que la aplicación se integre sin configuración adicional.
 
@@ -219,4 +300,42 @@ La aplicación crea automáticamente la tabla `blacklists` al iniciar con los si
 - asyncpg
 - Docker
 - Poetry
+
+## CI/CD y DevOps
+
+### AWS CodeBuild
+
+El proyecto incluye configuración completa para AWS CodeBuild:
+
+- **buildspec.yml**: Define el pipeline de build, test y push a ECR
+- Ejecuta tests con pytest antes de construir la imagen
+- Genera automáticamente `imagedefinitions.json` e `imageDetail.json` para CodeDeploy
+
+### AWS ECR
+
+La imagen Docker se almacena en Amazon ECR:
+
+```bash
+# Autenticación manual (si es necesario)
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 590340239150.dkr.ecr.us-east-1.amazonaws.com
+
+# Build local
+docker build -t blacklist .
+
+# Tag
+docker tag blacklist:latest 590340239150.dkr.ecr.us-east-1.amazonaws.com/blacklist:latest
+
+# Push
+docker push 590340239150.dkr.ecr.us-east-1.amazonaws.com/blacklist:latest
+```
+
+### AWS ECS Fargate
+
+Configuración para despliegue en ECS Fargate:
+
+- **taskdef.json**: Define la tarea ECS (Fargate, puerto 9000)
+- **appspec.json**: Configuración de CodeDeploy para despliegue blue/green
+- Contenedor: `blacklist-app`
+- Puerto: `9000`
+- Recursos: 512 CPU, 1024 MB memoria
 
