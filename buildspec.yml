@@ -47,7 +47,7 @@ phases:
       - docker push 590340239150.dkr.ecr.us-east-1.amazonaws.com/blacklist:latest
       - echo Writing Image Definitions file...
       - printf '[{"name":"blacklist-app","imageUri":"590340239150.dkr.ecr.us-east-1.amazonaws.com/blacklist:latest"}]' > imagedefinitions.json
-      - printf '{"ImageURI":"590340239150.dkr.ecr.us-east-1.amazonaws.com/blacklist:latest"}' > imageDetail.json
+      - printf '{"ImageURI":"590340239150.dkr.ecr.us-east-1.amazonaws.com/blacklist:1.0.0"}' > imageDetail.json
       - cat imagedefinitions.json
       
       # Mostrar información del build
