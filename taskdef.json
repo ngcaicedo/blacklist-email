@@ -24,6 +24,26 @@
         {
           "name": "DB_ECHO",
           "value": "False"
+        },
+        {
+          "name": "NEW_RELIC_APP_NAME",
+          "value": "Blacklist-API-AWS"
+        },
+        {
+          "name": "NEW_RELIC_LOG",
+          "value": "stdout"
+        },
+        {
+          "name": "NEW_RELIC_DISTRIBUTED_TRACING_ENABLED",
+          "value": "true"
+        },
+        {
+          "name": "NEW_RELIC_LOG_LEVEL",
+          "value": "info"
+        },
+        {
+          "name": "NEW_RELIC_ENVIRONMENT",
+          "value": "production"
         }
       ],
       "secrets": [
@@ -46,6 +66,10 @@
         {
           "name": "AUTH_TOKEN",
           "valueFrom": "arn:aws:secretsmanager:us-east-1:590340239150:secret:blacklist/rds/password-simNBg:AUTH_TOKEN::"
+        },
+        {
+          "name": "NEW_RELIC_LICENSE_KEY",
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:590340239150:secret:blacklist/rds/password-simNBg:NEW_RELIC_LICENSE_KEY::"
         }
       ]
     }

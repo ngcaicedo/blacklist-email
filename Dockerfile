@@ -36,8 +36,25 @@ COPY --from=base /app/src/ /app/src/
 ENV PYTHONPATH=/app/src
 ENV PYTHONUNBUFFERED=1
 
+# ============================================
+# Configuración de New Relic APM
+# ============================================
+# Nombre de la aplicación en New Relic dashboard
+ENV NEW_RELIC_APP_NAME="Blacklist-API"
+# Enviar logs a stdout para Docker/ECS
+ENV NEW_RELIC_LOG=stdout
+# Habilitar distributed tracing para mejor observabilidad
+ENV NEW_RELIC_DISTRIBUTED_TRACING_ENABLED=true
+# Nivel de log (info, debug, warning, error)
+ENV NEW_RELIC_LOG_LEVEL=info
+# La license key se define en docker-compose o como secret en ECS
+# ENV NEW_RELIC_LICENSE_KEY=tu_license_key_aqui
+
 # Expone el puerto 
 EXPOSE 9000
 
-# Ejecutamos la aplicación en el servidor
+# Usamos newrelic-admin como entrypoint para instrumentar la aplicación
+ENTRYPOINT ["newrelic-admin", "run-program"]
+
+# Ejecutamos la aplicación en el servidor con New Relic instrumentación
 CMD ["uvicorn", "entrypoints.api.main:app", "--host", "0.0.0.0", "--port", "9000"]

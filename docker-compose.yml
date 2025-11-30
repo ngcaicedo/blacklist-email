@@ -29,6 +29,15 @@ services:
       AUTH_TOKEN: bearer-token-static-2024
       APP_NAME: Blacklist API
       DB_ECHO: "False"
+      # ============================================
+      # Configuración de New Relic APM
+      # ============================================
+      NEW_RELIC_APP_NAME: "Blacklist-API-Local"
+      NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+      NEW_RELIC_LOG: stdout
+      NEW_RELIC_DISTRIBUTED_TRACING_ENABLED: "true"
+      NEW_RELIC_LOG_LEVEL: info
+      NEW_RELIC_ENVIRONMENT: development
     ports:
       - "9000:9000"
     depends_on:
