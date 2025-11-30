@@ -1,9 +1,9 @@
 {
-    "taskDefinition": "Task-app-blacklist:3",
-    "cluster": "snoopy-penguin-6zdbdn",
+    "taskDefinition": "Task-app-blacklist:31",
+    "cluster": "gifted-bird-8uh45a",
     "loadBalancers": [
         {
-            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:590340239150:targetgroup/target-group-1/d2bf67d79ff1fc2a",
+            "targetGroupArn": "arn:aws:elasticloadbalancing:us-east-1:590340239150:targetgroup/target-group-1/bcc25e2a27f32e5d",
             "containerName": "blacklist-app",
             "containerPort": 9000
         }
@@ -17,11 +17,11 @@
     "networkConfiguration": {
         "awsvpcConfiguration": {
             "subnets": [
-                "subnet-0b9de3da9bbb720fa",
-                "subnet-06515d4cee411c6b6"
+                "subnet-04e7f4810d37d92f0",
+                "subnet-05bc258d3699b3b3a"
             ],
             "securityGroups": [
-                "sg-09c5de800081158c0"
+                "sg-0f556360f234af5c2"
             ],
             "assignPublicIp": "ENABLED"
         }
